@@ -4,19 +4,20 @@ import argparse
 
 
 def bytes_stream(key):
+    stream = bytearray(range(256))
+    i = j = 0
     key = [ord(char) for char in key]
-    stream = [_ for _ in range(256)]
-    i = 0
     for j in range(256):
         i = (i + stream[j] + key[j % len(key)]) % 256
         stream[j], stream[i] = stream[i], stream[j]
-    i = 0
-    j = 0
+    
+    i = j = 0
     while True:
         i = (i + 1) % 256
         j = (stream[i] + j) % 256
-        stream[j], stream[i] = stream[i], stream[j]
+        stream[i], stream[j] = stream[j], stream[i]
         yield stream[(stream[i] + stream[j]) % 256]
+
 
 def encrypt(text, key):
     text = [ord(char) for char in text]
